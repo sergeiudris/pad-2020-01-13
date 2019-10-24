@@ -1,8 +1,11 @@
 {:paths []
- :deps {pad/coll {:git hash}
-        pad/data {:git hash}
-        ; pad/datomic {:git hash} import manually
-        ; pad/dgraph {:git hash} import manually
-        pad/io {:git hash}
-        pad/math {:git hash}
-        pad/prn {:git hash}}}
+ :deps {
+        pad/coll {:local/root "src/coll"}
+       ;  pad/data {:local/root "src/coll"}
+       ;  pad/io {:local/root "src/coll"}
+       ;  pad/coll {:local/root "src/coll"}
+       ;  pad/math {:local/root "src/coll"}
+       ;  pad/prn {:local/root "src/coll"}
+        ; pad/datomic {:local/root "src/datomic"} import manually
+        ; pad/dgraph {:local/root "src/dgraph"} import manually
+       }}
