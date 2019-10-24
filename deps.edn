@@ -1,0 +1,8 @@
+{:paths []
+ :deps {pad/coll {:git hash}
+        pad/data {:git hash}
+        ; pad/datomic {:git hash} import manually
+        ; pad/dgraph {:git hash} import manually
+        pad/io {:git hash}
+        pad/math {:git hash}
+        pad/prn {:git hash}}}
