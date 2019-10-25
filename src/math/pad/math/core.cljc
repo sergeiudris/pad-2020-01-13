@@ -286,11 +286,16 @@
   ;;;
   )
 
+
 (defn scalar-add
   "Returns vector, adds a scalar element-wise"
   [x v]
   (mapv #(+ % x)  v))
 
+(defn  scalar-subtract
+  "Returns vector, subtracts a scalar element-wise"
+  [x v]
+  (mapv #(- % x)  v))
 
 (defn mx-prod
   "Returns the product of multiplying AB.
@@ -795,8 +800,6 @@
   "Returns root-mean-square of the de-meaned vec"
   [a]
   (Math/sqrt (- (sq (root-mean-square a)) (sq (vec-mean a)))))
-
-
 
 (defn diff-max-min
   "Returns the diff of max nad min els"
