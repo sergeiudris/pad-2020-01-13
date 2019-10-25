@@ -23,6 +23,14 @@
   ;
   )
 
+(defn linst
+  [v]
+  (->> v
+       reflect
+       :members
+       (filter #(contains? (:flags %) :public))
+       pp/print-table))
+
 (defn javadoc-print-url
   "Opens a browser window displaying the javadoc for the argument.
   Tries *local-javadocs* first, then *remote-javadocs*."
