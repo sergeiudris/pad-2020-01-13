@@ -24,7 +24,14 @@
    (flatten A)
    vec))
 
+(defn mk-one-hot-vec
+  [size idx]
+  (->
+   (repeat size 0)
+   (vec)
+   (assoc idx 1)))
 
+#_(mk-one-hot-vec  5 2)
 
 (defn mx->rows
   "Returns two dim vector of rows of A"
