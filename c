@@ -7,6 +7,9 @@ link_spaces(){
     LIB=coll
     ln -s ../../src/$LIB/pad/$LIB spaces/$SPACE/$LIB
     
+    LIB=core
+    ln -s ../../src/$LIB/pad spaces/$SPACE/$LIB
+
     LIB=data
     ln -s ../../src/$LIB/pad/$LIB spaces/$SPACE/$LIB
 
@@ -21,6 +24,8 @@ link_spaces(){
 
     LIB=prn
     ln -s ../../src/$LIB/pad/$LIB spaces/$SPACE/$LIB
+
+   
 
 }
 

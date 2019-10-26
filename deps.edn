@@ -1,5 +1,6 @@
 {:paths []
  :deps {pad/coll {:local/root "src/coll"}
+        pad/core {:local/root "src/core"}
         pad/data {:local/root "src/data"}
         pad/io {:local/root "src/io"}
         pad/math {:local/root "src/math"}
