@@ -27,9 +27,9 @@
 (defn mk-one-hot-vec
   [size idx]
   (->
-   (repeat size 0)
+   (repeat size 0.0)
    (vec)
-   (assoc idx 1)))
+   (assoc idx 1.0)))
 
 #_(mk-one-hot-vec  5 2)
 
@@ -807,6 +807,17 @@
   "Returns root-mean-square of the de-meaned vec"
   [a]
   (Math/sqrt (- (sq (root-mean-square a)) (sq (vec-mean a)))))
+
+; https://github.com/numpy/numpy/blob/v1.17.0/numpy/core/fromnumeric.py#L3322
+; The standard deviation is the square root of the average of the squared
+; deviations from the mean, i.e., ``std = sqrt (mean (abs (x - x.mean ()) **2)) ``.
+
+(defn std [a]
+  (->>
+   (scalar-subtract (vec-mean a) a)
+   (map sq)
+   (vec-mean)
+   (Math/sqrt)))
 
 (defn diff-max-min
   "Returns the diff of max nad min els"
