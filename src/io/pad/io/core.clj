@@ -13,6 +13,26 @@
   (with-open [rdr (clojure.java.io/reader filename)]
     (nth (line-seq rdr) (dec line-number))))
 
+(defn read-n-lines
+  "Read n lines from the given text file"
+  ([filename]
+   (read-n-lines filename 0 5))
+  ([filename count]
+   (read-n-lines filename 0 count))
+  ([filename offset count]
+   (with-open [rdr (clojure.java.io/reader filename)]
+     (->> (line-seq rdr)
+          (drop offset)
+          (take count)
+          (vec)))))
+
+(defn pprn-n-lines
+  "read-n-lines , pp/print"
+  [& args]
+  (->> args
+       (apply read-n-lines)
+       (pp/pprint)))
+
 (defn count-lines
   [filename]
   (with-open [rdr (clojure.java.io/reader filename)]
