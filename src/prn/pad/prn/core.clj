@@ -23,13 +23,34 @@
   ;
   )
 
-(defn linst
+(defn linst-methods
   [v]
   (->> v
        reflect
        :members
        (filter #(contains? (:flags %) :public))
+       (filter #(or (instance? clojure.reflect.Method %)
+                    (instance? clojure.reflect.Constructor %)))
+       (sort-by :name)
+       (map #(select-keys % [:name :return-type :parameter-types]))
        pp/print-table))
+
+(defn linst-fields
+  [v]
+  (->> v
+       reflect
+       :members
+       (filter #(contains? (:flags %) :public))
+       (filter #(not (or (instance? clojure.reflect.Method %)
+                         (instance? clojure.reflect.Constructor %))))
+       (sort-by :name)
+       (map #(select-keys % [:name :return-type :parameter-types]))
+       pp/print-table))
+
+(defn linst
+  [v]
+  (linst-fields v)
+  (linst-methods v))
 
 (defn javadoc-print-url
   "Opens a browser window displaying the javadoc for the argument.
