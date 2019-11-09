@@ -1,8 +1,9 @@
 (ns pad.ml.bert
   (:require [clojure.string :as string]
+            [clojure.java.io :as io]
             [cheshire.core :as json]))
 
-(defn read-bert-vocab!
+(defn read-vocab!
   [filename]
   (json/parse-stream (io/reader filename)))
 
@@ -16,7 +17,7 @@
     (break-out-punctuation s target-char)
     [s]))
 
-(defn text>>bert-tokens [s]
+(defn text>>tokens [s]
   (->> (string/split s #"\s+")
        (mapcat break-out-punctuations)
        (into [])))
@@ -37,11 +38,11 @@
   (let [idx-to-token (get  vocab "idx_to_token")]
     (mapv #(get idx-to-token %) idxs)))
 
-(defn data>>bert-tokened
+(defn data>>tokened
   [data]
-  (mapv #(assoc % :tokens (-> % :description (string/lower-case) (text>>bert-tokens))) data))
+  (mapv #(assoc % :tokens (-> % :description (string/lower-case) (text>>tokens))) data))
 
-(defn data>>bert-padded
+(defn data>>padded
   [data vocab]
   (let [max-tokens-length (->> data (mapv #(count (:tokens %))) (apply max))
         seq-length 128 #_(inc max-tokens-length)]
