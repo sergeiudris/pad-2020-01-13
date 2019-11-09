@@ -3,9 +3,17 @@
             [clojure.java.io :as io]
             [cheshire.core :as json]))
 
-(defn read-vocab!
+(defn read-vocab-json!
   [filename]
   (json/parse-stream (io/reader filename)))
+
+(defn read-vocab!
+  [filename]
+  (with-open [rdr (io/reader filename)]
+    (let [lines (line-seq rdr)
+          lines-vec (vec lines)]
+      {"idx_to_token" lines-vec
+       "token_to_idx" (reduce-kv #(assoc %1 %2 %3) {} lines-vec)})))
 
 
 (defn break-out-punctuation [s str-match]
@@ -45,7 +53,7 @@
 (defn data>>padded
   [data vocab]
   (let [max-tokens-length (->> data (mapv #(count (:tokens %))) (apply max))
-        seq-length 128 #_(inc max-tokens-length)]
+        seq-length max-tokens-length]
     (->> data
          (mapv (fn [v]
                  (let [tokens (->> v :tokens (take (- seq-length 2)))
@@ -58,3 +66,10 @@
                                      :token-types token-types
                                      :valid-length [valid-length]}
                              :tokens tokens})))))))
+
+(defn data>>batch-column
+  [data column-key]
+  (->> data
+       (mapv #(-> % :batch column-key))
+       (flatten)
+       (vec)))
