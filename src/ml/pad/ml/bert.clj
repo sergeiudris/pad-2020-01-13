@@ -39,8 +39,8 @@
     (mapv #(get idx-to-token %) idxs)))
 
 (defn data>>tokened
-  [data]
-  (mapv #(assoc % :tokens (-> % :description (string/lower-case) (text>>tokens))) data))
+  [data item>>text]
+  (mapv #(assoc % :tokens (-> % (item>>text) (string/lower-case) (text>>tokens))) data))
 
 (defn data>>padded
   [data vocab]
