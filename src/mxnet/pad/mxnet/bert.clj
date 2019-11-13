@@ -1,4 +1,4 @@
-(ns pad.ml.bert
+(ns pad.mxnet.bert
   (:require [clojure.string :as string]
             [clojure.java.io :as io]
             [cheshire.core :as json]))
