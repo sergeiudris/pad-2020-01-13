@@ -2000,3 +2000,12 @@
 
   ;;;
   )
+
+(defn cos-sim
+  [a b]
+  (/ (dot-prod a b) (* (vec-norm a) (vec-norm b))))
+
+#_(cos-sim [1 2] [10 20])
+#_(cos-sim [1 2] [-1 -2])
+
+

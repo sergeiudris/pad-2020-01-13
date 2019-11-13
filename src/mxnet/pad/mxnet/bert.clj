@@ -51,21 +51,43 @@
   (mapv #(assoc % :tokens (-> % (item>>text) (string/lower-case) (text>>tokens))) data))
 
 (defn data>>padded
-  [data vocab]
-  (let [max-tokens-length (->> data (mapv #(count (:tokens %))) (apply max))
-        seq-length max-tokens-length]
-    (->> data
-         (mapv (fn [v]
-                 (let [tokens (->> v :tokens (take (- seq-length 2)))
-                       valid-length (count tokens)
-                       token-types (pad [] 0 seq-length)
-                       tokens (->> (concat ["[CLS]"] tokens ["[SEP]"])  (vec))
-                       tokens (pad tokens "[PAD]" seq-length)
-                       idxs (tokens>>idxs vocab tokens)]
-                   (merge v {:batch {:idxs idxs
-                                     :token-types token-types
-                                     :valid-length [valid-length]}
-                             :tokens tokens})))))))
+  ([data vocab]
+   (data>>padded data vocab {}))
+  ([data vocab {:keys [seq-length]}]
+   (let [max-tokens-length (->> data (mapv #(count (:tokens %))) (apply max))
+         seq-length (or seq-length max-tokens-length)]
+     (->> data
+          (mapv (fn [v]
+                  (let [tokens (->> v :tokens (take (- seq-length 2)))
+                        valid-length (count tokens)
+                        token-types (pad [] 0 seq-length)
+                        tokens (->> (concat ["[CLS]"] tokens ["[SEP]"])  (vec))
+                        tokens (pad tokens "[PAD]" seq-length)
+                        idxs (tokens>>idxs vocab tokens)]
+                    (merge v {:batch {:idxs idxs
+                                      :token-types token-types
+                                      :valid-length [valid-length]}
+                              :tokens tokens}))))))))
+
+(defn pair>>padded
+  ([pair vocab]
+   (pair>>padded pair vocab {}))
+  ([pair vocab {:keys [seq-length]}]
+   (let [a (first pair)
+         b (second pair)
+         valid-length (+ (count (:tokens a)) (count (:tokens b)))
+         token-a (-> (concat ["[CLS]"] (:tokens a) ["[SEP]"]) (vec))
+         token-b (-> (concat (:tokens b) ["[SEP]"]) (vec))
+         token-types (into (pad [] 0 (count token-a))
+                           (pad [] 1 (count token-b)))
+         token-types (pad token-types 0 seq-length)
+         tokens (into token-a token-b)
+         tokens (pad tokens "[PAD]" seq-length)
+         idxs (tokens>>idxs vocab tokens)]
+     {:batch {:idxs idxs
+              :token-types token-types
+              :valid-length [valid-length]}
+      :tokens tokens})))
 
 (defn data>>batch-column
   [data column-key]
