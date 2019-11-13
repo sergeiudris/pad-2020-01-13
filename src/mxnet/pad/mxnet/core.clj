@@ -34,10 +34,11 @@
   "Reads glove file into {word embeddings}"
   [path]
   (prn "-- reading glove from " path)
-  (->> (io/reader path)
-       (line-seq)
-       (lines>>word-embeddings)
-       (into {})))
+  (let [xs (->> (io/reader path)
+                (line-seq)
+                (lines>>word-embeddings))]
+    {:idx-to-token (mapv first xs)
+     :token-to-embedding (into {} xs)}))
 
 (defn glove-path
   [glove-dir embedding-size]
@@ -53,4 +54,5 @@
 #_(nd/->vec (nd// a b))
 #_(nd/->vec (cos-sim a b))
 #_(nd/->vec (cos-sim a c))
+
 
