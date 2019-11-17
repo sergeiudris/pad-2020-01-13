@@ -7,6 +7,7 @@
         pad/prn {:local/root "src/prn"}
         pad/nrepl {:local/root "src/nrepl"}
         pad/mxnet {:local/root "src/mxnet"}
+        pad/dataset {:local/root "src/dataset"}
         ; pad/datomic {:local/root "src/datomic"} import manually
         ; pad/dgraph {:local/root "src/dgraph"} import manually
         }}

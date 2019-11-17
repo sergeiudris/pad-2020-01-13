@@ -23,30 +23,7 @@
             [org.apache.clojure-mxnet.infer :as infer]
             [org.apache.clojure-mxnet.visualization :as viz]))
 
-(defn lines>>word-embeddings
-  "maps lines into  [[word embeddings]..]"
-  [lines]
-  (for [^String line lines
-        :let [fields (.split line " ")]]
-    [(first fields)
-     (mapv #(Float/parseFloat %) (rest fields))]))
 
-(defn read-glove!
-  "Reads glove file into {word embeddings}"
-  [path]
-  (prn "-- reading glove from " path)
-  (let [xs (->> (io/reader path)
-                (line-seq)
-                (lines>>word-embeddings))]
-    {:vec (vec xs)
-     :idx-to-token (mapv first xs)
-     :token-to-embedding (into {} xs)
-     :token-to-idx (->> xs (map-indexed #(vector (first %2) %1)) (into {}))
-     }))
-
-(defn glove-path
-  [glove-dir embedding-size]
-  (format (str glove-dir "glove.6B.%dd.txt") embedding-size))
 
 (defn cos-sim
   [a b]

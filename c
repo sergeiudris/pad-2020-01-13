@@ -1,6 +1,7 @@
 #!/bin/bash
 
 link_spaces(){
+    
     SPACE=pad
     mkdir -p spaces/$SPACE
 
@@ -26,6 +27,9 @@ link_spaces(){
     ln -s ../../src/$LIB/pad/$LIB spaces/$SPACE/$LIB
 
     LIB=mxnet
+    ln -s ../../src/$LIB/pad/$LIB spaces/$SPACE/$LIB
+
+    LIB=dataset
     ln -s ../../src/$LIB/pad/$LIB spaces/$SPACE/$LIB
    
 
