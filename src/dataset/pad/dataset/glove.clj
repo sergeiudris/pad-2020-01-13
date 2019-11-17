@@ -35,7 +35,7 @@
 
 (defn fetch-glove
   [{:dir/keys [shell] :as opts}]
-  (let [script (format (script-fetch-glove opts))]
+  (let [script (script-fetch-glove opts)]
     (sh "bash" "-c" script :dir shell)))
 
 (defn data-dir
@@ -79,11 +79,12 @@
     (def glove-to-embedding (:token-to-embedding glove))
     (def glove-to-token (:idx-to-token glove))
     (def glove-to-idx (:token-to-idx glove))
+    )
 
-    (first glove-vec)
-    (get glove-to-embedding "the")
-    (get glove-to-token 0)
-    (get glove-to-idx "the")
+  (first glove-vec)
+  (get glove-to-embedding "the")
+  (get glove-to-token 0)
+  (get glove-to-idx "the")
 
   ;
-    )
+  )

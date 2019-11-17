@@ -1,7 +1,6 @@
-(ns pad.mxnet.core
+(ns pad.ml.mxnet
   (:require [clojure.string :as string]
             [clojure.java.io :as io]
-
             [org.apache.clojure-mxnet.io :as mx-io]
             [org.apache.clojure-mxnet.context :as context]
             [org.apache.clojure-mxnet.module :as m]
@@ -58,16 +57,3 @@
 #_(def a (nd/array [1 2 3 4] [4]))
 #_(def b (normalize a))
 
-(defn build-vocab
-  "Returns {word idx}"
-  [tokens]
-  (let [words (flatten tokens)
-        freq (reduce (fn [a word]
-                       (update-in a [word] (fnil inc 0))) {} words)
-        freq-sorted (sort-by second > freq)
-        words-sorted (map first freq-sorted)]
-    {:frequencies freq
-     :frequencies-sorted freq-sorted
-     :indexes (->>
-               (map vector words-sorted (range 0 (count words-sorted)))
-               (into {}))}))
