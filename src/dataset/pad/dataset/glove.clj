@@ -64,6 +64,26 @@
      :token-to-embedding (into {} xs)
      :token-to-idx (->> xs (map-indexed #(vector (first %2) %1)) (into {}))}))
 
-(defn glove-filename
+(defn glove-filepath
   [{:keys [embedding-size] :as opts}]
   (format (str (data-dir opts) (format (:filename/glove-fmt -conf)  embedding-size))))
+
+(comment
+
+  (nd/concatenate [(nd/array [1 2] [2]) (nd/array [1 2] [2])])
+  (def v (get glove-embeddings "matrix"))
+
+  (do
+    (def glove (-> (glove-filepath 50) (read-glove!)))
+    (def glove-vec (:vec glove))
+    (def glove-to-embedding (:token-to-embedding glove))
+    (def glove-to-token (:idx-to-token glove))
+    (def glove-to-idx (:token-to-idx glove))
+
+    (first glove-vec)
+    (get glove-to-embedding "the")
+    (get glove-to-token 0)
+    (get glove-to-idx "the")
+
+  ;
+    )

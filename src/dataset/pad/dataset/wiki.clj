@@ -18,8 +18,9 @@
   {:dir/shell "/opt/app/"
    :dir/target "/opt/app/tmp/data/wiki-sample/"})
 
-(def script-fetch-wiki-file
-  "
+(defn script-fetch-wiki-file
+  [{:dir/keys [target]}]
+  (format "
   # https://ftp.acc.umu.se/mirror/wikimedia.org/dumps/enwiki/20191101/
 
   DIR=%s
@@ -30,12 +31,11 @@
 
   wget https://ftp.acc.umu.se/mirror/wikimedia.org/dumps/enwiki/20191101/$FILE
   bzip2 -d $FILE
-  ")
+  " target (:filename/wiki-sample -conf)))
 
 (defn fetch-wiki-sample
-  [{:dir/keys [shell target]}]
-  (let [{wiki-sample :filename/wiki-sample} -conf
-        script (format script-fetch-wiki-file target wiki-sample)]
+  [{:dir/keys [shell target] :as opts}]
+  (let [script (script-fetch-wiki-file opts)]
     (sh "bash" "-c" script :dir shell)))
 
 #_(fetch-wiki-sample {:shell-dir "/opt/app"

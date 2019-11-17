@@ -1,4 +1,4 @@
 {:paths ["."]
- :deps {
-        org.clojure/data.xml {:mvn/version "0.0.8"}
-        }}
+ :deps {org.clojure/data.xml {:mvn/version "0.0.8"}
+        org.clojure/data.csv {:mvn/version "0.1.4"}
+        cheshire {:mvn/version "5.8.1"}}}

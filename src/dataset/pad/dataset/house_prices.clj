@@ -5,10 +5,15 @@
             [clojure.string :as string]
             [clojure.xml]
             [clojure.data.xml :as xml]
+            [clojure.data.csv :refer [read-csv]]
             [pad.prn.core :refer [linst]]
             [pad.coll.core :refer [contained?]]
             [pad.io.core :refer [read-nth-line count-lines]]
-            [pad.core :refer [str-float? str>>float resolve-var]]))
+            [pad.core :refer [str-float? str>>float resolve-var]]
+            [pad.math.core :refer [vec-standard-deviation-2
+                                   scalar-subtract elwise-divide
+                                   vec-mean scalar-divide
+                                   mk-one-hot-vec std]]))
 
 (def -conf
   {:filename/train "train.csv"
@@ -34,8 +39,8 @@
   " target))
 
 (defn fetch-dataset
-  [{:dir/keys [shell target]}]
-  (let [script (format script-fetch-cmu target)]
+  [{:dir/keys [shell] :as opts}]
+  (let [script (script-fetch-dataset opts)]
     (sh "bash" "-c" script :dir shell)))
 
 #_(:exit (sh "bash" "-c" "sudo chmod -R 777 tmp/" :dir "/opt/app"))
@@ -45,7 +50,7 @@
   target-dir)
 
 #_(data-dir opts)
-#_(.exists (io/file (str (data-dir) (:filename/train -conf) )))
+#_(.exists (io/file (str (data-dir opts) (:filename/train -conf) )))
 
 (defn read-column-mdata
   [{:keys [nulls] :or {nulls []}}]
@@ -69,8 +74,8 @@
                            :dtype dtype}
                           (when (= dtype :string)
                             {:distinct (distinct (mapv #(nth % k) rows))})))))]
-    (with-open [reader-train (io/reader (str data-dir "train.csv"))
-                reader-test (io/reader (str data-dir "test.csv"))]
+    (with-open [reader-train (io/reader (str (data-dir opts) (:filename/train -conf)))
+                reader-test (io/reader (str (data-dir opts) (:filename/test -conf)))]
       (let [data-train (read-csv reader-train)
             data-test (read-csv reader-test)
             rows-train (map #(-> % (rest) (butlast)) data-train)
@@ -93,7 +98,7 @@
   (->> (scalar-subtract  (vec-mean v) v)
        (scalar-divide (std v))))
 
-#_(def a-row (with-open [reader (io/reader (str data-dir "train.csv"))]
+#_(def a-row (with-open [reader (io/reader (str (data-dir opts) (:filename/train -conf)))]
                (let [data (read-csv reader)
                      rows (rest data)]
                  (->> (nth rows 16)
@@ -145,15 +150,7 @@
           (string-field>>val [colm v]
             (->> (:distinct colm)
                  (keep-indexed (fn [i x]
-                                 (if (= x v);  DIR=./tmp/data/house
-;   mkdir -p $DIR
-;   cd $DIR
-
-;   # wget https://www.kaggle.com/c/house-prices-advanced-regression-techniques/download/train.csv
-;   # wget https://www.kaggle.com/c/house-prices-advanced-regression-techniques/download/test.csv
-
-;   wget https://s3.us-east-2.amazonaws.com/tech.public.data/house-prices-advanced-regression-techniques.zip
-;   unzip house-prices-advanced-regression-techniques.zip
+                                 (if (= x v);  
                                    (mk-one-hot-vec (count (:distinct colm)) i)
                                    nil)))
                  (first)))
@@ -216,26 +213,26 @@
       (slurp)
       (read-string)))
 
-#_(csv-file>>edn-file! {:filename (str data-dir "train.csv")
-                        :filename-out (str data-dir "train.csv.txt")
+#_(csv-file>>edn-file! {:filename (str (data-dir opts) (:filename/train -conf))
+                        :filename-out (str (data-dir opts) "train.csv.txt")
                         :nulls ["NA"]
                         :row>>row-vals (fn [row]
                                          (-> row (rest) (butlast)))
                         :row>>score (fn [row]
                                       [(str>>float (last row))])})
 
-#_(csv-file>>edn-file! {:filename (str data-dir "test.csv")
-                        :filename-out (str data-dir "test.csv.txt")
+#_(csv-file>>edn-file! {:filename (str (data-dir opts) (:filename/test -conf))
+                        :filename-out (str (data-dir opts) "test.csv.txt")
                         :nulls ["NA"]
                         :row>>row-vals (fn [row]
                                          (-> row (rest)))
                         :row>>score (fn [row]
                                       [100000])})
 
-#_(-> (slurp (str data-dir "test.csv.txt")) (read-string) (count))
-#_(-> (slurp (str data-dir "train.csv.txt")) (read-string) (count))
-#_(-> (slurp (str data-dir "train.csv.txt")) (read-string) (first) :features (count))
-#_(-> (slurp (str data-dir "test.csv.txt")) (read-string)  (first) :features (count))
+#_(-> (slurp (str (data-dir opts) "test.csv.txt")) (read-string) (count))
+#_(-> (slurp (str (data-dir opts) "train.csv.txt")) (read-string) (count))
+#_(-> (slurp (str (data-dir opts) "train.csv.txt")) (read-string) (first) :features (count))
+#_(-> (slurp (str (data-dir opts) "test.csv.txt")) (read-string)  (first) :features (count))
 
-#_(read-nth-line (str data-dir "train.csv") 704)
-#_(read-nth-line (str data-dir "test.csv") 1)
+#_(read-nth-line (str (data-dir opts) "train.csv") 704)
+#_(read-nth-line (str (data-dir opts) "test.csv") 1)

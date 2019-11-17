@@ -20,19 +20,20 @@
   {:dir/shell "/opt/app/"
    :dir/target "/opt/app/tmp/data/cmu/"})
 
-(def script-fetch-cmu
-  "
+(defn script-fetch-cmu
+  [{:dir/keys [target]}]
+  (format "
   DIR=%s
   mkdir -p $DIR
   cd $DIR
   wget http://www.cs.cmu.edu/~ark/personas/data/MovieSummaries.tar.gz
   tar -xvzf MovieSummaries.tar.gz
   # mv ./MovieSummaries/* ./
-  ")
+  " target))
 
 (defn fetch-cmu
-  [{:dir/keys [shell target]}]
-  (let [script (format script-fetch-cmu target)]
+  [{:dir/keys [shell] :as opts}]
+  (let [script (script-fetch-cmu opts)]
     (sh "bash" "-c" script :dir shell)))
 
 #_(fetch-cmu {:shell-dir "/opt/app"
