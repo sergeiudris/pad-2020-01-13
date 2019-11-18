@@ -64,7 +64,8 @@
      :token-to-idx (->> xs (map-indexed #(vector (first %2) %1)) (into {}))}))
 
 (defn glove-filepath
-  [{:keys [embedding-size] :as opts}]
+  [{embedding-size :glove/embedding-size
+    :as opts}]
   (format (str (data-dir opts) (format (:glove.filename/glove-fmt -conf)  embedding-size))))
 
 (comment
