@@ -46,7 +46,9 @@
   [{:bert.dir/keys [shell] :as opts}]
   (sh "bash" "-c" (bash-script-fetch-bert-example opts) :dir shell))
 
-(defn bash-script-bert-python
+#_(fetch-bert-example opts)
+
+(defn bash-script-fetch-bert-python
   [{:bert.dir/keys [mxnet python-scripts ]
     :bert.python/keys [task seq-length prefix num-classes output-dir]}]
   (format "
@@ -60,18 +62,22 @@
   
   DIR_MXNET_MODELS=$DIR_MXNET/models
 
-  python $DIR_PYTHON_BERT/export/export.py \\
+  python3 $DIR_PYTHON_BERT/export/export.py \\
     --task $TASK \\
     --prefix $PREFIX \\
     --seq_length $SEQ_LENGTH \\
     --num_classes $NUM_CLASSES \\
     --output_dir $OUTPUT_DIR
+
+  cd $OUTPUT_DIR
+  curl https://s3.us-east-2.amazonaws.com/mxnet-scala/scala-example-ci/BertQA/vocab.json -o vocab.json        
   " mxnet python-scripts task seq-length prefix num-classes output-dir))
 
-(defn fetch-bert-example
+(defn fetch-bert-python
   [{:bert.dir/keys [shell] :as opts}]
-  (sh "bash" "-c" (bash-script-bert-python opts) :dir shell))
+  (sh "bash" "-c" (bash-script-fetch-bert-python opts) :dir shell))
 
+#_(fetch-bert-python opts)
 
 (defn read-vocab-json!
   [filename]

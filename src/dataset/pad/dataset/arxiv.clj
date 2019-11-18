@@ -35,7 +35,7 @@
   cd $DIR
 
   git clone https://github.com/seeris/sample.ml.data
-  mv datasets/arxiv-20191101/* ./
+  mv sample.ml.data/datasets/arxiv-20191101/* ./
   rm -rf sample.ml.data
   " target))
 
@@ -113,7 +113,7 @@
 #_(->> data (map :setSpec) (distinct))
 
 (defn categories>>data!
-  [{:keys [categories] :as opts}]
+  [{:arxiv/keys [categories] :as opts}]
   (->> categories
        (mapcat (fn [c]
                  (->> (str (data-dir opts) "oai2-" c "-1000.xml")
