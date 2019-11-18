@@ -17,13 +17,18 @@
    
    })
 
+(def categories ["cs" "econ" "eess" "math" "physics" "q-bio" "q-fin" "stat"])
+(def categories ["cs" "physics" "math" "q-bio"])
+(def padding-token "</s>")
+
 (def opts
-  {:dir/shell "/opt/app/"
-   :dir/target "/opt/app/tmp/data/arxiv/"
+  {:arxiv.dir/shell "/opt/app/"
+   :arxiv.dir/target "/opt/app/tmp/data/arxiv/"
+   :arxiv.categories categories
    })
 
 (defn script-fetch-arxiv-sample
-  [{:dir/keys [target]}]
+  [{:arxiv.dir/keys [target]}]
   (format "
   DIR=%s
   mkdir -p $DIR
@@ -35,20 +40,16 @@
   " target))
 
 (defn fetch-arxiv-sample
-  [{:dir/keys [shell] :as opts}]
-  (let [script (script-fetch-arxiv-sample opts)]
-    (sh "bash" "-c" script :dir shell)))
+  [{:arxiv.dir/keys [shell] :as opts}]
+  (sh "bash" "-c" (script-fetch-arxiv-sample opts)  :dir shell))
 
 (defn data-dir
-  [{target-dir :dir/target}]
+  [{target-dir :arxiv.dir/target}]
   target-dir)
 
 #_(data-dir opts)
 
-(def categories ["cs" "econ" "eess" "math" "physics" "q-bio" "q-fin" "stat"])
-(def categories ["cs" "physics" "math" "q-bio"])
-(def padding-token "</s>")
-(def embedding-size 50)
+
 
 (defn axriv-xml-file>>article-vec!
   "Returns a vector of  articles' metadata in xml-edn"

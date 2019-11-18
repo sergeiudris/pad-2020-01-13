@@ -11,15 +11,15 @@
             [pad.core :refer [str-float? str>>float resolve-var]]))
 
 (def -conf
-  {:filename/wiki-sample "enwiki-20191101-pages-articles1.xml-p10p30302.bz2"} ; 64417 categories
+  {:wiki.filename/wiki-sample "enwiki-20191101-pages-articles1.xml-p10p30302.bz2"} ; 64417 categories
   )
 
 (def opts
-  {:dir/shell "/opt/app/"
-   :dir/target "/opt/app/tmp/data/wiki-sample/"})
+  {:wiki.dir/shell "/opt/app/"
+   :wiki.dir/target "/opt/app/tmp/data/wiki-sample/"})
 
 (defn script-fetch-wiki-file
-  [{:dir/keys [target]}]
+  [{:wiki.dir/keys [target]}]
   (format "
   # https://ftp.acc.umu.se/mirror/wikimedia.org/dumps/enwiki/20191101/
 
@@ -31,23 +31,22 @@
 
   wget https://ftp.acc.umu.se/mirror/wikimedia.org/dumps/enwiki/20191101/$FILE
   bzip2 -d $FILE
-  " target (:filename/wiki-sample -conf)))
+  " target (:wiki.filename/wiki-sample -conf)))
 
 (defn fetch-wiki-sample
-  [{:dir/keys [shell target] :as opts}]
-  (let [script (script-fetch-wiki-file opts)]
-    (sh "bash" "-c" script :dir shell)))
+  [{:wiki.dir/keys [shell target] :as opts}]
+  (sh "bash" "-c" (script-fetch-wiki-file opts) :dir shell))
 
 #_(fetch-wiki-sample {:shell-dir "/opt/app"
                       :target-dir "/opt/app/tmp/data/cmu"})
 
 (defn data-dir
-  [{target-dir :dir/target}]
+  [{target-dir :wiki.dir/target}]
   target-dir)
 
 (defn sample-filename
   [opts]
-  (str (data-dir opts) (:filename/wiki-sample -conf)))
+  (str (data-dir opts) (:wiki.filename/wiki-sample -conf)))
 
 #_(data-dir opts)
 #_(sample-filename opts)

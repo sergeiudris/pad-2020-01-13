@@ -11,17 +11,17 @@
             [pad.core :refer [str-float? str>>float resolve-var]]))
 
 (def -conf
-  {:filename/summaries "plot_summaries.txt"
-   :filename/metadata "movie.metadata.tsv"
-   :dir/movie-summaries "MovieSummaries/"
+  {:cmu.filename/summaries "plot_summaries.txt"
+   :cmu.filename/metadata "movie.metadata.tsv"
+   :cmu.dir/movie-summaries "MovieSummaries/"
    })
 
 (def opts
-  {:dir/shell "/opt/app/"
-   :dir/target "/opt/app/tmp/data/cmu/"})
+  {:cmu.dir/shell "/opt/app/"
+   :cmu.dir/target "/opt/app/tmp/data/cmu/"})
 
 (defn script-fetch-cmu
-  [{:dir/keys [target]}]
+  [{:cmu.dir/keys [target]}]
   (format "
   DIR=%s
   mkdir -p $DIR
@@ -32,23 +32,22 @@
   " target))
 
 (defn fetch-cmu
-  [{:dir/keys [shell] :as opts}]
-  (let [script (script-fetch-cmu opts)]
-    (sh "bash" "-c" script :dir shell)))
+  [{:cmu.dir/keys [shell] :as opts}]
+  (sh "bash" "-c" (script-fetch-cmu opts) :dir shell))
 
 #_(fetch-cmu {:shell-dir "/opt/app"
               :target-dir "/opt/app/tmp/data/cmu"})
 
 (defn data-dir
-  [{target-dir :dir/target}]
-  (str target-dir (:dir/movie-summaries -conf)))
+  [{target-dir :cmu.dir/target}]
+  (str target-dir (:cmu.dir/movie-summaries -conf)))
 
 #_(data-dir opts)
 
 (comment
 
-  (read-nth-line (str (data-dir opts) (:filename/summaries -conf)) 1)
-  (-> (read-nth-line (str (data-dir opts) (:filename/metadata -conf)) 2) (string/split #"\t"))
+  (read-nth-line (str (data-dir opts) (:cmu.filename/summaries -conf)) 1)
+  (-> (read-nth-line (str (data-dir opts) (:cmu.filename/metadata -conf)) 2) (string/split #"\t"))
   
   ;
   )
@@ -61,7 +60,7 @@
          (map #(string/split % (re-pattern (str separator))))
          (vec))))
 
-#_(def mdata (csv-file>>vec! (str (data-dir opts) (:filename/metadata -conf))))
+#_(def mdata (csv-file>>vec! (str (data-dir opts) (:cmu.filename/metadata -conf))))
 #_(-> mdata (first))
 
 (defn csv-vec>>entities
@@ -73,7 +72,7 @@
 
 (defn read-metadata!
   [{:keys [] :as opts}]
-  (->> (str (data-dir opts) (:filename/metadata -conf))
+  (->> (str (data-dir opts) (:cmu.filename/metadata -conf))
        (csv-file>>vec!)
        (csv-vec>>entities [:id-wiki :id-freebase :name
                            :release-date :box-office
@@ -87,7 +86,7 @@
 
 (defn read-summaries!
   [{:keys [] :as opts}]
-  (->> (str (data-dir opts) (:filename/metadata -conf))
+  (->> (str (data-dir opts) (:cmu.filename/metadata -conf))
        (csv-file>>vec!)
        (csv-vec>>entities [:id-wiki :summary])
        (reduce #(assoc %1 (:id-wiki %2) %2) {})))

@@ -17,15 +17,18 @@
    })
 
 (def opts
-  {:dir/shell "/opt/app/"
-   :dir/bert-export "/opt/app/tmp/data/bert-export/"
-   :dir/bert-example "/opt/app/tmp/data/bert/"
-   :dir/python-bert "/opt/root/python/bert/"
-   :dir/mxnet "/root/.mxnet/"
-   })
+  {:bert.dir/shell "/opt/app/"
+   :bert.dir/from-mxnet-example "/opt/app/tmp/data/bert/"
+   :bert.dir/python-scripts "/opt/root/python/bert/"
+   :bert.dir/mxnet "/root/.mxnet/"
+   :bert.python/task "classification"
+   :bert.python/seq-length 512
+   :bert.python/prefix "bert-cls-4"
+   :bert.python/num-classes 4
+   :bert.python/output-dir "/opt/app/tmp/data/bert-export/"})
 
 (defn script-fetch-bert-example
-  [{:dir/keys [bert-example]}]
+  [{:bert.dir/keys [from-mxnet-example]}]
   (format "
   DIR=%s
   mkdir -p $DIR
@@ -37,16 +40,15 @@
   curl https://s3.us-east-2.amazonaws.com/mxnet-scala/scala-example-ci/BertQA/static_bert_base_net-symbol.json -o static_bert_base_net-symbol.json
   curl https://s3.us-east-2.amazonaws.com/mxnet-scala/scala-example-ci/BertQA/static_bert_base_net-0000.params -o static_bert_base_net-0000.params
   curl https://raw.githubusercontent.com/dmlc/gluon-nlp/master/docs/examples/sentence_embedding/dev.tsv -o dev.tsv
-  " bert-example))
+  " from-mxnet-example))
 
 (defn fetch-bert-example
-  [{:dir/keys [shell] :as opts}]
-  (let [script (script-fetch-bert-example opts)]
-    (sh "bash" "-c" script :dir shell)))
+  [{:bert.dir/keys [shell] :as opts}]
+  (sh "bash" "-c" (script-fetch-bert-example opts) :dir shell))
 
 (defn script-bert-python
-  [{:dir/keys [mxnet python-bert bert-export]
-    :keys [task seq-length prefix num-classes]}]
+  [{:bert.dir/keys [mxnet python-scripts ]
+    :bert.python/keys [task seq-length prefix num-classes output-dir]}]
   (format "
   DIR_MXNET=%s
   DIR_PYTHON_BERT=%s
@@ -64,12 +66,11 @@
     --seq_length $SEQ_LENGTH \\
     --num_classes $NUM_CLASSES \\
     --output_dir $OUTPUT_DIR
-  " mxnet python-bert task seq-length prefix num-classes bert-export))
+  " mxnet python-scripts task seq-length prefix num-classes output-dir))
 
 (defn fetch-bert-example
-  [{:dir/keys [shell] :as opts}]
-  (let [script (script-bert-python opts)]
-    (sh "bash" "-c" script :dir shell)))
+  [{:bert.dir/keys [shell] :as opts}]
+  (sh "bash" "-c" (script-bert-python opts) :dir shell))
 
 
 (defn read-vocab-json!

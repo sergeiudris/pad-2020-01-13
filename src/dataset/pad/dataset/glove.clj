@@ -12,17 +12,17 @@
 
 (def -conf
   {
-   :filename/glove-fmt "glove.6B.%dd.txt"
+   :glove.filename/glove-fmt "glove.6B.%dd.txt"
    })
 
 (def opts
-  {:dir/shell "/opt/app/"
-   :dir/target "/opt/app/tmp/data/glove/"
-   :embedding-size 50
+  {:glove.dir/shell "/opt/app/"
+   :glove.dir/target "/opt/app/tmp/data/glove/"
+   :glove/embedding-size 50
    })
 
 (defn script-fetch-glove
-  [{:dir/keys [target]}]
+  [{:glove.dir/keys [target]}]
   (format "
   DIR=%s
   mkdir -p $DIR
@@ -34,12 +34,11 @@
   " target))
 
 (defn fetch-glove
-  [{:dir/keys [shell] :as opts}]
-  (let [script (script-fetch-glove opts)]
-    (sh "bash" "-c" script :dir shell)))
+  [{:glove.dir/keys [shell] :as opts}]
+  (sh "bash" "-c" (script-fetch-glove opts) :dir shell))
 
 (defn data-dir
-  [{target-dir :dir/target}]
+  [{target-dir :glove.dir/target}]
   target-dir)
 
 #_(data-dir opts)
@@ -66,7 +65,7 @@
 
 (defn glove-filepath
   [{:keys [embedding-size] :as opts}]
-  (format (str (data-dir opts) (format (:filename/glove-fmt -conf)  embedding-size))))
+  (format (str (data-dir opts) (format (:glove.filename/glove-fmt -conf)  embedding-size))))
 
 (comment
 

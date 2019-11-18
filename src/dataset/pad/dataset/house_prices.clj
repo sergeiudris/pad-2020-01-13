@@ -16,16 +16,16 @@
                                    mk-one-hot-vec std]]))
 
 (def -conf
-  {:filename/train "train.csv"
-   :filename/test "test.csv"
+  {:house-prices.filename/train "train.csv"
+   :house-prices.filename/test "test.csv"
    })
 
 (def opts
-  {:dir/shell "/opt/app/"
-   :dir/target "/opt/app/tmp/data/house-prices/"})
+  {:house-prices.dir/shell "/opt/app/"
+   :house-prices.dir/target "/opt/app/tmp/data/house-prices/"})
 
 (defn script-fetch-dataset
-  [{:dir/keys [target]}]
+  [{:house-prices.dir/keys [target]}]
   (format "
   DIR=%s
   mkdir -p $DIR
@@ -39,18 +39,17 @@
   " target))
 
 (defn fetch-dataset
-  [{:dir/keys [shell] :as opts}]
-  (let [script (script-fetch-dataset opts)]
-    (sh "bash" "-c" script :dir shell)))
+  [{:house-prices.dir/keys [shell] :as opts}]
+  (sh "bash" "-c" (script-fetch-dataset opts) :dir shell))
 
 #_(:exit (sh "bash" "-c" "sudo chmod -R 777 tmp/" :dir "/opt/app"))
 
 (defn data-dir
-  [{target-dir :dir/target}]
+  [{target-dir :house-prices.dir/target}]
   target-dir)
 
 #_(data-dir opts)
-#_(.exists (io/file (str (data-dir opts) (:filename/train -conf) )))
+#_(.exists (io/file (str (data-dir opts) (:house-prices.filename/train -conf) )))
 
 (defn read-column-mdata
   [{:keys [nulls] :or {nulls []}}]
@@ -74,8 +73,8 @@
                            :dtype dtype}
                           (when (= dtype :string)
                             {:distinct (distinct (mapv #(nth % k) rows))})))))]
-    (with-open [reader-train (io/reader (str (data-dir opts) (:filename/train -conf)))
-                reader-test (io/reader (str (data-dir opts) (:filename/test -conf)))]
+    (with-open [reader-train (io/reader (str (data-dir opts) (:house-prices.filename/train -conf)))
+                reader-test (io/reader (str (data-dir opts) (:house-prices.filename/test -conf)))]
       (let [data-train (read-csv reader-train)
             data-test (read-csv reader-test)
             rows-train (map #(-> % (rest) (butlast)) data-train)
@@ -213,7 +212,7 @@
       (slurp)
       (read-string)))
 
-#_(csv-file>>edn-file! {:filename (str (data-dir opts) (:filename/train -conf))
+#_(csv-file>>edn-file! {:filename (str (data-dir opts) (:house-prices.filename/train -conf))
                         :filename-out (str (data-dir opts) "train.csv.txt")
                         :nulls ["NA"]
                         :row>>row-vals (fn [row]
@@ -221,7 +220,7 @@
                         :row>>score (fn [row]
                                       [(str>>float (last row))])})
 
-#_(csv-file>>edn-file! {:filename (str (data-dir opts) (:filename/test -conf))
+#_(csv-file>>edn-file! {:filename (str (data-dir opts) (:house-prices.filename/test -conf))
                         :filename-out (str (data-dir opts) "test.csv.txt")
                         :nulls ["NA"]
                         :row>>row-vals (fn [row]
