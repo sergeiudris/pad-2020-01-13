@@ -107,32 +107,25 @@
 #_(count data)
 #_(->> data (filter :summary) (count))
 
-#_(do
-    (def mdata (read-metadata!))
-    (def summs (read-summaries!))
+
+(comment
+
+
+  (do
+    (def mdata (read-metadata! opts))
+    (def summs (read-summaries! opts))
     (def data (data>>joined mdata summs))
-    (def bert-vocab (bert/read-vocab-json! (str bert-dir bert-base-vocab-filename)))
-    (def data-tokened (bert/data>>tokened data #(:summary %)))
-    (def data-filtered (->> data-tokened (filterv #(<= (-> % :tokens (count)) 254))))
-    ; (def data-padded (bert/data>>padded data-filtered bert-vocab {:seq-length 512}))
-    (def data-sorted (->> data-filtered (sort-by :box-office >)))
-    (def seq-length 512)
+    (def data-sorted (->> data (sort-by :box-office >)))
     (def data-sorted-map (->> data-sorted (reduce #(assoc %1 (:id-wiki %2) %2) {}))))
 
-#_(->> (get bert-vocab "idx_to_token") (count)) ; 30522
-#_(->> (get bert-vocab "token_to_idx") (count)) ; 30522
-#_(-> (get bert-vocab "token_to_idx") (get "[SEP]"))
+  (count data-sorted)
+  (->> data-sorted (map :box-office) (take 10))
+  (->> data-sorted (take 20) (map #(select-keys % [:id-wiki :name :box-office])))
+  (-> data-sorted-map (get "174251") (select-keys [:id-wiki :name :box-office]))
 
-#_(count data-sorted)
-#_(->> data-tokened (map #(count (:tokens %))) (apply max))
-#_(->> data-tokened (filter #(< (-> % :tokens (count)) 128)) (count))
-#_(->> data-tokened (map :box-office) (take 10))
-#_(->> data-tokened
-       (filter #(< (-> % :tokens (count)) 128))
-       (sort-by :box-office >)
-       (take 20)
-       (map #(select-keys % [:name :box-office])))
-#_(-> data-sorted (first) :tokens (count))
-#_(->> data-sorted (take 20) (map #(select-keys % [:id-wiki :name :box-office])))
-#_(-> data-sorted-map (get "161190") (select-keys [:id-wiki :name :box-office]))
+  ;
+  )
+
+
+
 
