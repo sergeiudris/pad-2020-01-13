@@ -27,7 +27,7 @@
    :bert.python/num-classes 4
    :bert.python/output-dir "/opt/app/tmp/data/bert-export/"})
 
-(defn script-fetch-bert-example
+(defn bash-script-fetch-bert-example
   [{:bert.dir/keys [from-mxnet-example]}]
   (format "
   DIR=%s
@@ -44,9 +44,9 @@
 
 (defn fetch-bert-example
   [{:bert.dir/keys [shell] :as opts}]
-  (sh "bash" "-c" (script-fetch-bert-example opts) :dir shell))
+  (sh "bash" "-c" (bash-script-fetch-bert-example opts) :dir shell))
 
-(defn script-bert-python
+(defn bash-script-bert-python
   [{:bert.dir/keys [mxnet python-scripts ]
     :bert.python/keys [task seq-length prefix num-classes output-dir]}]
   (format "
@@ -70,7 +70,7 @@
 
 (defn fetch-bert-example
   [{:bert.dir/keys [shell] :as opts}]
-  (sh "bash" "-c" (script-bert-python opts) :dir shell))
+  (sh "bash" "-c" (bash-script-bert-python opts) :dir shell))
 
 
 (defn read-vocab-json!

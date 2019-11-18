@@ -27,7 +27,7 @@
    :arxiv.categories categories
    })
 
-(defn script-fetch-arxiv-sample
+(defn bash-script-fetch-arxiv-sample
   [{:arxiv.dir/keys [target]}]
   (format "
   DIR=%s
@@ -41,7 +41,7 @@
 
 (defn fetch-arxiv-sample
   [{:arxiv.dir/keys [shell] :as opts}]
-  (sh "bash" "-c" (script-fetch-arxiv-sample opts)  :dir shell))
+  (sh "bash" "-c" (bash-script-fetch-arxiv-sample opts)  :dir shell))
 
 (defn data-dir
   [{target-dir :arxiv.dir/target}]

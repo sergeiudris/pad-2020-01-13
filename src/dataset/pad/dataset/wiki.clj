@@ -18,7 +18,7 @@
   {:wiki.dir/shell "/opt/app/"
    :wiki.dir/target "/opt/app/tmp/data/wiki-sample/"})
 
-(defn script-fetch-wiki-file
+(defn bash-script-fetch-wiki-file
   [{:wiki.dir/keys [target]}]
   (format "
   # https://ftp.acc.umu.se/mirror/wikimedia.org/dumps/enwiki/20191101/
@@ -35,7 +35,7 @@
 
 (defn fetch-wiki-sample
   [{:wiki.dir/keys [shell target] :as opts}]
-  (sh "bash" "-c" (script-fetch-wiki-file opts) :dir shell))
+  (sh "bash" "-c" (bash-script-fetch-wiki-file opts) :dir shell))
 
 #_(fetch-wiki-sample {:shell-dir "/opt/app"
                       :target-dir "/opt/app/tmp/data/cmu"})

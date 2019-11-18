@@ -24,7 +24,7 @@
   {:house-prices.dir/shell "/opt/app/"
    :house-prices.dir/target "/opt/app/tmp/data/house-prices/"})
 
-(defn script-fetch-dataset
+(defn bash-script-fetch-dataset
   [{:house-prices.dir/keys [target]}]
   (format "
   DIR=%s
@@ -40,7 +40,7 @@
 
 (defn fetch-dataset
   [{:house-prices.dir/keys [shell] :as opts}]
-  (sh "bash" "-c" (script-fetch-dataset opts) :dir shell))
+  (sh "bash" "-c" (bash-script-fetch-dataset opts) :dir shell))
 
 #_(:exit (sh "bash" "-c" "sudo chmod -R 777 tmp/" :dir "/opt/app"))
 

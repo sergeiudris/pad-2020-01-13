@@ -21,7 +21,7 @@
    :glove/embedding-size 50
    })
 
-(defn script-fetch-glove
+(defn bash-script-fetch-glove
   [{:glove.dir/keys [target]}]
   (format "
   DIR=%s
@@ -35,7 +35,7 @@
 
 (defn fetch-glove
   [{:glove.dir/keys [shell] :as opts}]
-  (sh "bash" "-c" (script-fetch-glove opts) :dir shell))
+  (sh "bash" "-c" (bash-script-fetch-glove opts) :dir shell))
 
 (defn data-dir
   [{target-dir :glove.dir/target}]

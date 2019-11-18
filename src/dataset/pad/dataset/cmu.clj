@@ -20,7 +20,7 @@
   {:cmu.dir/shell "/opt/app/"
    :cmu.dir/target "/opt/app/tmp/data/cmu/"})
 
-(defn script-fetch-cmu
+(defn bash-script-fetch-cmu
   [{:cmu.dir/keys [target]}]
   (format "
   DIR=%s
@@ -33,7 +33,7 @@
 
 (defn fetch-cmu
   [{:cmu.dir/keys [shell] :as opts}]
-  (sh "bash" "-c" (script-fetch-cmu opts) :dir shell))
+  (sh "bash" "-c" (bash-script-fetch-cmu opts) :dir shell))
 
 #_(fetch-cmu {:shell-dir "/opt/app"
               :target-dir "/opt/app/tmp/data/cmu"})
