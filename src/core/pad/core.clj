@@ -7,6 +7,13 @@
   []
   (System/getProperty "java.vm.version"))
 
+(defn memory
+  []
+  {:max (-> (Runtime/getRuntime) (.maxMemory) (/ 1000000) (int)  (str "mb"))
+   :min (-> (Runtime/getRuntime) (.minMemory) (/ 1000000) (int)  (str "mb"))
+   :total (-> (Runtime/getRuntime) (.totalMemory) (/ 1000000) (int)  (str "mb"))
+   :free (-> (Runtime/getRuntime) (.freeMemory) (/ 1000000) (int)  (str "mb"))})
+
 (comment
 
   (System/getProperty "java.vm.version")
@@ -19,6 +26,9 @@
   (-> (Runtime/getRuntime) (.maxMemory) (/ 1000000) (int)  (str "mb"))
   (-> (Runtime/getRuntime) (.freeMemory) (/ 1000000) (int)  (str "mb"))
   (-> (Runtime/getRuntime) (.totalMemory) (/ 1000000) (int)  (str "mb"))
+
+  (read-string "[:key some-text]")
+  (-> (read-string "[:key some-text]") (second) (type))
 
   ;
   )

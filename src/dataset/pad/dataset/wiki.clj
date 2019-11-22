@@ -11,7 +11,7 @@
             [pad.core :refer [str-float? str>>float resolve-var]]))
 
 (def -conf
-  {:wiki.filename/wiki-sample "enwiki-20191101-pages-articles1.xml-p10p30302.bz2"} ; 64417 categories
+  {:wiki.filename/wiki-sample "enwiki-20191101-pages-articles1.xml-p10p30302"} ; 19817 articles 64417 categories
   )
 
 (def opts
@@ -77,7 +77,7 @@
   ; https://stackoverflow.com/questions/47832579/clojure-reducing-large-lazy-collection-eats-up-memory
 
   (def data-raw (slurp (sample-filename opts)))
-  (def data-xml (xml/parse data-raw))
+  (def data-xml (xml/parse-str data-raw))
 
   (with-open [input (java.io.FileInputStream. (sample-filename opts))]
     (->> input

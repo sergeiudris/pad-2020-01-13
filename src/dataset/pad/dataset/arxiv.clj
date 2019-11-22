@@ -181,7 +181,7 @@
   "Limits the length of token (sentence)"
   [data & {:keys [tokens-limit]}]
   (mapv (fn [v]
-          (update v :tokens #(->> % (take tokens-limit) (vec)))) data))
+          (update v :tokens #(->> % (take (or tokens-limit ##Inf)) (vec)))) data))
 
 (defn tokens>>padded
   [tokens padding-token max-seq-length]
