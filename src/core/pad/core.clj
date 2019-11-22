@@ -7,10 +7,9 @@
   []
   (System/getProperty "java.vm.version"))
 
-(defn memory
+(defn memory-info
   []
   {:max (-> (Runtime/getRuntime) (.maxMemory) (/ 1000000) (int)  (str "mb"))
-   :min (-> (Runtime/getRuntime) (.minMemory) (/ 1000000) (int)  (str "mb"))
    :total (-> (Runtime/getRuntime) (.totalMemory) (/ 1000000) (int)  (str "mb"))
    :free (-> (Runtime/getRuntime) (.freeMemory) (/ 1000000) (int)  (str "mb"))})
 
