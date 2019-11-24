@@ -3,9 +3,11 @@
 
 (def resolve-var pad.comm/resolve-var)
 
-(defn java-version
+(defn java-info
   []
-  (System/getProperty "java.vm.version"))
+  [(System/getProperty "java.version")
+   (System/getProperty "java.vm.name")
+   (System/getProperty "java.vm.version")])
 
 (defn memory-info
   []
@@ -14,10 +16,15 @@
    :free (-> (Runtime/getRuntime) (.freeMemory) (/ 1000000) (int)  (str "mb"))})
 
 (comment
+  
+  (java-info)
 
+  (System/getProperties )
+  (keys (System/getProperties))
+  (System/getProperty "java.vm.name")
   (System/getProperty "java.vm.version")
   (System/getProperty "java.version")
-  (System/getProperty "java.specification.version")
+
   (clojure-version)
 
   (.. Runtime getRuntime freeMemory)
