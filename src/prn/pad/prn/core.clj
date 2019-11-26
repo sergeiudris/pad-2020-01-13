@@ -2,6 +2,7 @@
   (:require [clojure.repl :refer :all]
             [clojure.reflect :refer :all]
             [clojure.pprint :as pp]
+            [clojure.java.shell :refer [sh]]
             [clojure.java.javadoc :refer [javadoc]]
             ; [puget.printer :as pug]
             [clojure.string :as cstr]
@@ -86,3 +87,9 @@
   "print using System.out.println"
   [msg]
   (.println (System/out) msg))
+
+(defn bash-ls
+  [dir]
+  (-> (sh "bash" "-c" "ls -a" :dir dir)
+      :out
+      (string/split #"\n")))
