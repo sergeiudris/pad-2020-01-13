@@ -39,6 +39,22 @@
   (linst-fields v)
   (linst-methods v))
 
+(comment
+
+  (def dctors (.getDeclaredConstructors String))
+  (doseq [c dctors]
+    (prn (.toGenericString c)))
+  (def ctros (.getConstructors String))
+  (doseq [c ctros]
+    (prn c))
+  ;
+  )
+
+(defn list-ctors
+  [cls]
+  (doseq [x (.getDeclaredConstructors cls)]
+    (prn (.toGenericString x))))
+
 (defn javadoc-print-url
   "Opens a browser window displaying the javadoc for the argument.
   Tries *local-javadocs* first, then *remote-javadocs*."
