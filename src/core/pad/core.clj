@@ -49,3 +49,27 @@
 (defn str-float?
   [s]
   (number? (str>>float s)))
+
+(defn safe-deref-future
+  [fu]
+  (when (and (future-done? fu)
+             (not (future-cancelled? fu)))
+    (deref fu)))
+
+(comment
+
+  (def fu (future
+            (Thread/sleep 1000)
+            (prn "hello")
+            (Thread/sleep 10000)
+            123))
+  (future-cancel fu)
+
+  (if (realized? fu) (deref))
+
+  (future-cancelled? fu)
+  (safe-deref-future fu)
+  
+
+  ;
+  )
