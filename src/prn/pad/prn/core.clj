@@ -5,7 +5,7 @@
             [clojure.java.shell :refer [sh]]
             [clojure.java.javadoc :refer [javadoc]]
             ; [puget.printer :as pug]
-            [clojure.string :as cstr]
+            [clojure.string :as string]
             ;
             ))
 
