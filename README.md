@@ -1,5 +1,6 @@
 # pad
-a collection of functions
+
+personal scratchpad-lib
 
 ## rationale
 
