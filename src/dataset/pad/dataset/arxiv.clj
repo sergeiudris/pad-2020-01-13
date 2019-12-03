@@ -34,9 +34,9 @@
   mkdir -p $DIR
   cd $DIR
 
-  git clone https://github.com/seeris/sample.ml.data
-  mv sample.ml.data/datasets/arxiv-20191101/* ./
-  rm -rf sample.ml.data
+  git clone https://github.com/seeris/test.deeplearning.data
+  mv test.deeplearning.data/datasets/arxiv-20191101/* ./
+  rm -rf test.deeplearning.data
   " target))
 
 (defn fetch-arxiv-sample

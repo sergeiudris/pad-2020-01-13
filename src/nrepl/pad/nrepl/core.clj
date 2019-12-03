@@ -5,12 +5,8 @@
    ;
             ))
 
-#_(defn nrepl-handler []
-  (require 'cider.nrepl)
-  (ns-resolve 'cider.nrepl 'cider-nrepl-handler))
-
-(defn start-nrepl-server [& {:keys [host port] :or {port 7888 host "0.0.0.0"}}]
-  (prn (str "--started nREPL server on " port))
+(defn start-nrepl-server [host port]
+  (println (str "--started nREPL server on " host ":" port))
   (start-server
    :bind host
    :port port
