@@ -1,3 +1,3 @@
 # pad
 
-a scratchpad-lib
+personal scratchpad-lib
