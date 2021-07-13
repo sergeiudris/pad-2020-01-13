@@ -34,7 +34,7 @@
   mkdir -p $DIR
   cd $DIR
 
-  git clone https://github.com/test.deeplearning.data
+  git clone https://github.com/seeris/test.deeplearning.data
   mv test.deeplearning.data/datasets/arxiv-20191101/* ./
   rm -rf test.deeplearning.data
   " target))
